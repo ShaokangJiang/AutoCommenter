@@ -1,0 +1,16 @@
+-----special:-----
+BAIDU_APP_ID: 
+BAIDU_SECURITY_KEY: 
+IFLY_APP_ID:
+-----conditions:-----
+if\s*\(.*\) Following code will be generated if ###.*### met.
+while\s*\(.*\) Following code will be excuted for multiple time till ###.*### doesn't met.
+do\s*\{ A do...while... loop will be handled.
+[^><!=]+={1}.* Assign values.
+for\s+\(.*\) Running iteration on required object.
+else\s*\{ Do the following if no condition above is met.
+return.*; Return ###.*### to the program call from.
+break; Break current loop.
+System\.out\.println\(.*\) Print information of ###.*### to the user screen.
+default\s*\: When default case get touched.
+case.*\: Under the case of ###.*###
