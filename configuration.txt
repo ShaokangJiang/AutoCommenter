@@ -2,6 +2,7 @@
 BAIDU_APP_ID: 
 BAIDU_SECURITY_KEY: 
 IFLY_APP_ID:
+lineLimit:90
 -----conditions:-----
 if\s*\(.*\) Following code will be generated if ###.*### met.
 while\s*\(.*\) Following code will be excuted for multiple time till ###.*### doesn't met.

@@ -81,7 +81,7 @@ public class GenerateClassName {
                                                                                          // ","
                                                                                          // issue
     for (int i = 1; i < ana.length; i += 2) {
-      String key = "@param " + ana[i].replace(",", "") + " -- A variable of type " + ana[i - 1];
+      String key = "@param " + ana[i].replace(",", "").trim() + " -- A variable of type " + ana[i - 1];
       if(!parameter.containsKey(key)) parameter.put(key, new HashSet<String>());
       parameter.get(key).add(buffer);
     }
@@ -89,7 +89,7 @@ public class GenerateClassName {
       String[] ana1 =
           buffer.replaceAll(".*throws", "").trim().replaceAll("\\{.*", "").split(",");
       for (int i = 0; i < ana1.length; i++) {
-        String key = "@throws " + ana1[i] + " -- throw " + ana1[i] + " when ";
+        String key = "@throws " + ana1[i].trim() + " -- throw " + ana1[i].trim() + " when ";
         if(!parameter.containsKey(key)) parameter.put(key, new HashSet<String>());
         parameter.get(key).add(buffer);
       }
@@ -116,7 +116,7 @@ public class GenerateClassName {
   }
 
   public static String getClassName(String content) {
-    if(content.contains("=")||!containModifier(content)||!content.contains("(")) return null;
+    if(content.contains("=")||!containModifier(content)||!content.contains("(")||content.contains(";")) return null;
     String[] analyzed = content.substring(0, content.lastIndexOf("(")).trim().split("\\s+");
     if(analyzed.length==1) return null;
     return analyzed[analyzed.length - 1];

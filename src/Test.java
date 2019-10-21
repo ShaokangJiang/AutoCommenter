@@ -22,7 +22,8 @@ public class Test {
       new HashMap<String, HashMap<String, String>>();
   // first element would be comment, second would be header
   private static HashMap<String, String> conf = new HashMap<String, String>();
-  private static int lineLimit = 100;
+  private static int lineLimit = 90;
+  private static int seperator = -1;
 
   public static void main(String[] args) throws InterruptedException {
     init();
@@ -76,8 +77,8 @@ public class Test {
         comments += com.substring(end, com.length());
       }
     }
-    return comments.replaceAll("\\{", "").replaceAll("\\(", "").replaceAll("\\}", "")
-        .replaceAll("\\)", "");
+    return getStr("\r\n"+comments.replaceAll("\\{", "").replaceAll("\\(", "").replaceAll("\\}", "")
+        .replaceAll("\\)", ""), "  //");
   }
 
   public static String findCommon(Pattern find, String a, String b) {
@@ -182,9 +183,11 @@ public class Test {
     while (s.hasNext()) {
       String[] v = s.next();
       System.out.println("AS v: " + v[0].split(" ")[1]);
-      conf.put(v[0].split(" ")[1],
+      conf.put(v[0].split(" ")[1].trim(),
           v[0] + askInfo("There is a case described as \r\n  " + v[0] + "\r\n" + "exists in " + v[1]
               + "\r\nType below for whatever you want to say after \r\n  " + v[0]));
+      System.out.println(v[0].split(" ")[1].trim());
+      System.out.println(conf.get(v[0].split(" ")[1].trim()));
     }
   }
 
@@ -193,7 +196,7 @@ public class Test {
     myFrame.setDone(false); // Still need data
     while (!myFrame.getFinished()) {
       myFrame.setVisible(true);
-      Thread.sleep(500);
+      Thread.sleep(300);
     }
     return myFrame.getLastResult();
   }
@@ -204,7 +207,7 @@ public class Test {
     myFrame.setDone(false); // Still need data
     while (!myFrame.getFinished()) {
       myFrame.setVisible(true);
-      Thread.sleep(500);
+      Thread.sleep(300);
     }
     return myFrame.getLastResult();
   }
@@ -238,17 +241,14 @@ public class Test {
       if (GenerateClassName.getClass(toWrite)) {
         toWrite = analyze(toWrite);
       } else if (GenerateClassName.getClassName(toWrite) != null) {
+        seperator = toWrite.length();
         toWrite = analyze(toWrite + " " +scnr.nextLine().trim());
       } else {
         String comments = meetCondition(toWrite);
-        if (!comments.equals("//"))
+        if (!comments.equals("\r\n//"))
           toWrite += comments;
       }
-      if (toWrite.length() >= lineLimit)
-        toWrite = getStr(toWrite);
-      else
-        toWrite = toWrite + "\r\n";
-      wr.write(toWrite);
+      wr.write(toWrite + "\r\n");
     }
     wr.close();
     scnr.close();
@@ -256,14 +256,14 @@ public class Test {
   }
 
   // FIX ME
-  public static String getStr(String inputString) {
+  public static String getStr(String inputString, String sep) {
     StringBuffer out = new StringBuffer();
     int counter = 0;
     for (int i = 0; inputString != null && i < inputString.length(); i++) {
       counter++;
       char c = inputString.charAt(i);
       if (counter > lineLimit) {
-        out.append("\r\n");
+        out.append("\r\n"+sep + c);
         counter = 0;
       } else if ((inputString.length() - i > 1) && c == '\r' && inputString.charAt(i + 1) == '\n') {
         i += 1;
@@ -291,15 +291,21 @@ public class Test {
       aaa = askInfo("A return type found for method" + buffer
           + "\r\n If you think this is an error, just click Finish. To say anything, describe below:");
     if (!aaa.equals(""))
-      aaa = GenerateClassName.returnType(buffer) + aaa;
+      aaa = getStr(GenerateClassName.returnType(buffer) + aaa,"  *");
+    else aaa="  *";
     String header = askInfo("The thing you want to put at javadoc area, At:\r\n " + "/**\r\n"
         + " * \r\n" + " */\r\n" + buffer, generateHeader(buffer));
     String comments = askInfo(
         "The thing you want to put at description area to describe method you are using, At:\r\n "
             + buffer + "/*\r\n" + " * \r\n" + " */",
         generateComment(buffer));
-    String re = "  /**\r\n" + "   * " + header + "\r\n   *\r\n" + analyzeParam(buffer) + aaa
-        + "\r\n" + "   */\r\n" + buffer + "\r\n     /*\r\n *" + comments + "\r\n     */\r\n";
+    String para = analyzeParam(buffer);
+    if(seperator!=-1) {
+      buffer = buffer.substring(0, seperator)+"\r\n"+buffer.substring(seperator,buffer.length());
+      seperator = -1;
+    }
+    String re = "  /**\r\n" + "   * " + getStr(header, "  *") + "\r\n   * \r\n" + para + aaa
+      + "\r\n" + "   */\r\n" + buffer + "\r\n     /*\r\n *" + getStr(comments, "  *") + "\r\n     */\r\n";
     return re;
   }
 
@@ -346,18 +352,21 @@ public class Test {
 
   private static String analyzeParam(String buffer) {
     // TODO Auto-generated method stub
-    String re = "";
+    StringBuilder re = new StringBuilder();
     String[] ana = buffer.replaceAll(".*\\(", "").replaceAll("\\).*$", "").split("\\s+");
     for (int i = 1; i < ana.length; i += 2) {
-      re += "  * " + conf.get(ana[i].replace(",", "")) + "\r\n";
+      re.append(getStr("  * " + conf.get(ana[i].replace(",", "").trim()) + "\r\n", "  * "));
+      System.out.println(ana[i].replace(",", "").trim());
+      System.out.println(conf.get(ana[i].replace(",", "").trim()));
+      System.out.println(getStr("  * " + conf.get(ana[i].replace(",", "").trim()) + "\r\n", "  * "));
     }
     if (buffer.contains("throws")) {
       String[] ana1 = buffer.replaceAll(".*throws", "").replaceAll("\\{.*", "").split(",");
       for (int i = 0; i < ana1.length; i++) {
-        re += "  * " + conf.get(ana1[i].trim()) + "\r\n";
+        re.append(getStr("  * " + conf.get(ana1[i].trim()) + "\r\n", "  * "));
       }
     }
-    return re;
+    return re.toString();
   }
 
 
