@@ -17,13 +17,14 @@ public class Test {
   static HashMap<Pattern, String> conditions = new HashMap<Pattern, String>();
   static Pattern find1 = Pattern.compile("###[\\S]+###");
   static String file_dir = "new";
-  static String path = "";
+  static String path = ".";
   private static HashMap<String, HashMap<String, String>> info =
       new HashMap<String, HashMap<String, String>>();
   // first element would be comment, second would be header
   private static HashMap<String, String> conf = new HashMap<String, String>();
   private static int lineLimit = 90;
   private static int seperator = -1;
+  static ArrayList<Integer> seps = new ArrayList<Integer>();
 
   public static void main(String[] args) throws InterruptedException {
     init();
@@ -33,8 +34,7 @@ public class Test {
           path = args[i];
           analyzeDirectory(args[i]);
         }
-      }
-      else {
+      } else {
         for (int i = 0; i < args.length; i++) {
           readParameter(new Scanner(new File(args[i])));
           askParameter();
@@ -77,8 +77,8 @@ public class Test {
         comments += com.substring(end, com.length());
       }
     }
-    return getStr("\r\n"+comments.replaceAll("\\{", "").replaceAll("\\(", "").replaceAll("\\}", "")
-        .replaceAll("\\)", ""), "  //");
+    return getStr("\r\n" + comments.replaceAll("\\{", "").replaceAll("\\(", "")
+        .replaceAll("\\}", "").replaceAll("\\)", ""), "  //");
   }
 
   public static String findCommon(Pattern find, String a, String b) {
@@ -112,18 +112,18 @@ public class Test {
         }
         if (spe) {
           try {
-          if (buffer.contains("BAIDU_APP_ID"))
-            MyFrame.BAIDU_APP_ID = buffer.split(":")[1].trim();
-          if (buffer.contains("BAIDU_SECURITY_KEY"))
-            MyFrame.BAIDU_SECURITY_KEY = buffer.split(":")[1].trim();
-          if (buffer.contains("IFLY_APP_ID"))
-            MyFrame.IFLY_APP_ID = buffer.split(":")[1].trim();
-          if (buffer.contains("lineLimit"))
-            lineLimit = Integer.parseInt(buffer.split(":")[1].trim());
-          }catch(Exception e) {
+            if (buffer.contains("BAIDU_APP_ID"))
+              MyFrame.BAIDU_APP_ID = buffer.split(":")[1].trim();
+            if (buffer.contains("BAIDU_SECURITY_KEY"))
+              MyFrame.BAIDU_SECURITY_KEY = buffer.split(":")[1].trim();
+            if (buffer.contains("IFLY_APP_ID"))
+              MyFrame.IFLY_APP_ID = buffer.split(":")[1].trim();
+            if (buffer.contains("lineLimit"))
+              lineLimit = Integer.parseInt(buffer.split(":")[1].trim());
+          } catch (Exception e) {
             System.err.println("Failed to read some personal data, Program will run without them.");
           }
-          }
+        }
 
       }
       if (buffer.contains("-----vars:-----")) {
@@ -169,7 +169,7 @@ public class Test {
       throws FileNotFoundException, IOException, InterruptedException {
 
     for (String a : readFile(string))
-      readParameter(new Scanner(new File(string+"//"+a)));
+      readParameter(new Scanner(new File(string + "//" + a)));
     askParameter();
     for (String a : readFile(string)) {
       analyzeFile(a);
@@ -186,8 +186,6 @@ public class Test {
       conf.put(v[0].split(" ")[1].trim(),
           v[0] + askInfo("There is a case described as \r\n  " + v[0] + "\r\n" + "exists in " + v[1]
               + "\r\nType below for whatever you want to say after \r\n  " + v[0]));
-      System.out.println(v[0].split(" ")[1].trim());
-      System.out.println(conf.get(v[0].split(" ")[1].trim()));
     }
   }
 
@@ -214,7 +212,7 @@ public class Test {
 
   private static void analyzeFile(String string)
       throws FileNotFoundException, IOException, InterruptedException {
-    generate(new Scanner(new File(path + "\\"+ string)),
+    generate(new Scanner(new File(path + "\\" + string)),
         new FileWriter(new File(".\\" + file_dir + "\\" + string)));
   }
 
@@ -226,9 +224,9 @@ public class Test {
       String toWrite = scnr.nextLine();
       if (GenerateClassName.getClass(toWrite)) {
         GenerateClassName.analyzeParam(toWrite);
-      }else if (GenerateClassName.getClassName(toWrite) != null) {
-        GenerateClassName.analyzeParam(toWrite + " " +scnr.nextLine().trim());
-    }
+      } else if (GenerateClassName.getClassName(toWrite) != null) {
+        GenerateClassName.analyzeParam(toWrite + " " + scnr.nextLine().trim());
+      }
     }
     scnr.close();
   }
@@ -242,9 +240,11 @@ public class Test {
         toWrite = analyze(toWrite);
       } else if (GenerateClassName.getClassName(toWrite) != null) {
         seperator = toWrite.length();
-        toWrite = analyze(toWrite + " " +scnr.nextLine().trim());
+        toWrite = analyze(toWrite + " " + scnr.nextLine().trim());
       } else {
+        toWrite = readComments(toWrite, scnr);
         String comments = meetCondition(toWrite);
+        toWrite = formateToWrite(toWrite);
         if (!comments.equals("\r\n//"))
           toWrite += comments;
       }
@@ -255,6 +255,50 @@ public class Test {
     return true;
   }
 
+  private static String formateToWrite(String toWrite) {
+    // TODO Auto-generated method stub
+    if(seps.isEmpty()) return toWrite;
+    else {
+      StringBuilder re = new StringBuilder();
+      int pre = 0;
+      for(Integer a : seps) {
+        re.append(toWrite.substring(pre, a)+"\r\n");
+        pre = a;
+      }
+      re.append(toWrite.substring(pre, toWrite.length()));
+      seps.clear();
+      return re.toString();
+    }
+  }
+
+
+  private static String readComments(String toWrite, Scanner scnr) {
+    // TODO Auto-generated method stub
+    int pre = 0;
+    int back = 0;
+    int start = 0;
+    while (scnr.hasNextLine()) {
+      for (int i = start; i < toWrite.length(); i++) {
+        char a = toWrite.charAt(i);
+        if (a == '(')
+          pre++;
+        else if (a == ')')
+          back++;
+      }
+      System.out.println("pre:"+pre+"back:"+back);
+      if (pre == back)
+        break;
+      else {
+        seps.add(toWrite.length());
+        start = toWrite.length();
+        toWrite += " " + scnr.nextLine().trim();
+        System.out.println(toWrite);
+      }
+    }
+    return toWrite;
+  }
+
+
   // FIX ME
   public static String getStr(String inputString, String sep) {
     StringBuffer out = new StringBuffer();
@@ -263,7 +307,7 @@ public class Test {
       counter++;
       char c = inputString.charAt(i);
       if (counter > lineLimit) {
-        out.append("\r\n"+sep + c);
+        out.append("\r\n" + sep + c);
         counter = 0;
       } else if ((inputString.length() - i > 1) && c == '\r' && inputString.charAt(i + 1) == '\n') {
         i += 1;
@@ -291,8 +335,9 @@ public class Test {
       aaa = askInfo("A return type found for method" + buffer
           + "\r\n If you think this is an error, just click Finish. To say anything, describe below:");
     if (!aaa.equals(""))
-      aaa = getStr(GenerateClassName.returnType(buffer) + aaa,"  *");
-    else aaa="  *";
+      aaa = getStr(GenerateClassName.returnType(buffer) + aaa, "  *");
+    else
+      aaa = "  *";
     String header = askInfo("The thing you want to put at javadoc area, At:\r\n " + "/**\r\n"
         + " * \r\n" + " */\r\n" + buffer, generateHeader(buffer));
     String comments = askInfo(
@@ -300,12 +345,14 @@ public class Test {
             + buffer + "/*\r\n" + " * \r\n" + " */",
         generateComment(buffer));
     String para = analyzeParam(buffer);
-    if(seperator!=-1) {
-      buffer = buffer.substring(0, seperator)+"\r\n"+buffer.substring(seperator,buffer.length());
+    if (seperator != -1) {
+      buffer =
+          buffer.substring(0, seperator) + "\r\n" + buffer.substring(seperator, buffer.length());
       seperator = -1;
     }
     String re = "  /**\r\n" + "   * " + getStr(header, "  *") + "\r\n   * \r\n" + para + aaa
-      + "\r\n" + "   */\r\n" + buffer + "\r\n     /*\r\n *" + getStr(comments, "  *") + "\r\n     */\r\n";
+        + "\r\n" + "   */\r\n" + buffer + "\r\n     /*\r\n *" + getStr(comments, "  *")
+        + "\r\n     */\r\n";
     return re;
   }
 
@@ -356,9 +403,6 @@ public class Test {
     String[] ana = buffer.replaceAll(".*\\(", "").replaceAll("\\).*$", "").split("\\s+");
     for (int i = 1; i < ana.length; i += 2) {
       re.append(getStr("  * " + conf.get(ana[i].replace(",", "").trim()) + "\r\n", "  * "));
-      System.out.println(ana[i].replace(",", "").trim());
-      System.out.println(conf.get(ana[i].replace(",", "").trim()));
-      System.out.println(getStr("  * " + conf.get(ana[i].replace(",", "").trim()) + "\r\n", "  * "));
     }
     if (buffer.contains("throws")) {
       String[] ana1 = buffer.replaceAll(".*throws", "").replaceAll("\\{.*", "").split(",");
