@@ -17,6 +17,7 @@ public class Test {
   static HashMap<Pattern, String> conditions = new HashMap<Pattern, String>();
   static Pattern find1 = Pattern.compile("###[\\S]+###");
   static String file_dir = "new";
+  static String path = "";
   private static HashMap<String, HashMap<String, String>> info =
       new HashMap<String, HashMap<String, String>>();
   // first element would be comment, second would be header
@@ -26,9 +27,12 @@ public class Test {
   public static void main(String[] args) throws InterruptedException {
     init();
     try {
-      if (args[0].contains("-d"))
-        for (int i = 1; i < args.length; i++)
+      if (args[0].contains("-d")) {
+        for (int i = 1; i < args.length; i++) {
+          path = args[i];
           analyzeDirectory(args[i]);
+        }
+      }
       else {
         for (int i = 0; i < args.length; i++) {
           readParameter(new Scanner(new File(args[i])));
@@ -164,7 +168,7 @@ public class Test {
       throws FileNotFoundException, IOException, InterruptedException {
 
     for (String a : readFile(string))
-      readParameter(new Scanner(new File(a)));
+      readParameter(new Scanner(new File(string+"//"+a)));
     askParameter();
     for (String a : readFile(string)) {
       analyzeFile(a);
@@ -207,7 +211,7 @@ public class Test {
 
   private static void analyzeFile(String string)
       throws FileNotFoundException, IOException, InterruptedException {
-    generate(new Scanner(new File(string)),
+    generate(new Scanner(new File(path + "\\"+ string)),
         new FileWriter(new File(".\\" + file_dir + "\\" + string)));
   }
 
