@@ -101,7 +101,7 @@ public class GenerateClassName {
     if (content.contains(")"))
       analyze1 = content.substring(content.lastIndexOf(")"), content.length()).trim()
           .replaceAll("\\s+", "");
-    if (containModifier(content) && analyze1.contains("{")) {
+    if (containModifier(content) && analyze1.contains("{") && !(content.contains("="))) {
       System.out.println("AS class: "+ content);
       return true;
     }
@@ -116,7 +116,9 @@ public class GenerateClassName {
   }
 
   public static String getClassName(String content) {
+    if(content.contains("=")||!containModifier(content)||!content.contains("(")) return null;
     String[] analyzed = content.substring(0, content.lastIndexOf("(")).trim().split("\\s+");
+    if(analyzed.length==1) return null;
     return analyzed[analyzed.length - 1];
   }
   

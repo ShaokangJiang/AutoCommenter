@@ -43,7 +43,8 @@ public class BankAccount {
   }
 
 
-  public void withdraw(int withdrawAmount) throws java.util.zip.DataFormatException {//sdsdvfdv
+  public void withdraw(int withdrawAmount) 
+      throws java.util.zip.DataFormatException {//sdsdvfdv
     if (withdrawAmount < 0 || withdrawAmount % 10 != 0)//pass if condition met
       throw new DataFormatException("withdrawalAmou" + "nt is negative or is not a multiple of 10");
     if (withdrawAmount > balance)//pass if condition met

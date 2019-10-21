@@ -1,6 +1,6 @@
 -----special:-----
-BAIDU_APP_ID: 
-BAIDU_SECURITY_KEY: 
+BAIDU_APP_ID:
+BAIDU_SECURITY_KEY:
 IFLY_APP_ID:
 -----conditions:-----
 if\s*\(.*\) Following code will be generated if ###.*### met.
