@@ -128,7 +128,7 @@ public class GenerateClassName {
       if(content.substring(content.lastIndexOf("("), content.lastIndexOf(")")).split("\\s+").length == 0) return "Default constructor";
       return "Non-default constructor";
     }else return null;
-  }
+  } 
 
   public static String returnType(String content) {
     if (content.contains("void"))
