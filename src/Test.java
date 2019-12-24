@@ -111,7 +111,7 @@ public class Test {
           pattern.add(h);
         }
         if (spe) {
-          try {
+          try { 
             if (buffer.contains("BAIDU_APP_ID"))
               MyFrame.BAIDU_APP_ID = buffer.split(":")[1].trim();
             if (buffer.contains("BAIDU_SECURITY_KEY"))
@@ -142,8 +142,16 @@ public class Test {
     }
   }
 
-  private static void init() {
+  public static void init() {
     Scanner scnr = new Scanner(System.in);
+    System.out.println("Type e for English listening, c for Chinese listening...");
+    String language = scnr.nextLine();
+    if(language.charAt(0) == 'e' || language.charAt(0) == 'E' ) {
+      MyFrame.setLanguage("en_us");
+      System.out.print("System start as English listening...");
+    }else {
+      System.out.print("System start as Chinese listening...");
+    }
     try {
       read(new Scanner(new File("configuration.txt")));
     } catch (FileNotFoundException e1) {
@@ -285,14 +293,14 @@ public class Test {
         else if (a == ')')
           back++;
       }
-      System.out.println("pre:"+pre+"back:"+back);
+      //System.out.println("pre:"+pre+"back:"+back);
       if (pre == back)
         break;
       else {
         seps.add(toWrite.length());
         start = toWrite.length();
         toWrite += " " + scnr.nextLine().trim();
-        System.out.println(toWrite);
+        //System.out.println(toWrite);
       }
     }
     return toWrite;

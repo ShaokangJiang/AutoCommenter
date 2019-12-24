@@ -4,5 +4,7 @@
 	<classpathentry kind="src" path="src"/>
 	<classpathentry kind="lib" path="C:/Users/Shaokang Jiang/Desktop/Java_iat1021_5daa428b/lib/lib/json-jena-1.0.jar"/>
 	<classpathentry kind="lib" path="C:/Users/Shaokang Jiang/Desktop/Java_iat1021_5daa428b/lib/lib/Msc.jar"/>
+	<classpathentry exported="true" kind="lib" path="json-jena-1.0.jar"/>
+	<classpathentry exported="true" kind="lib" path="Msc.jar"/>
 	<classpathentry kind="output" path="bin"/>
 </classpath>
