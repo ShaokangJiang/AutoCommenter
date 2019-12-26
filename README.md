@@ -9,7 +9,9 @@ And actually, this program can only add comments to some specific area. For some
 <!-- more -->
 
 **Github Page:** https://github.com/sjiang97/AutoCommenter
+
 **Compiled version:** https://github.com/sjiang97/AutoCommenter/releases
+
 **Code version:** https://github.com/sjiang97/AutoCommenter/archive/0.1.zip
 
 #### Sample result:
