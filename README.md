@@ -8,6 +8,21 @@ And actually, this program can only add comments to some specific area. For some
 
 <!-- more -->
 
+**Github Page:** https://github.com/sjiang97/AutoCommenter
+**Compiled version:** https://github.com/sjiang97/AutoCommenter/releases
+**Code version:** https://github.com/sjiang97/AutoCommenter/archive/0.1.zip
+
+#### Sample result:
+
+**Before adding:**
+
+![](https://raw.githubusercontent.com/sjiang97/sjiang97.github.io/master/2019/projects/AutoCommenter/1.png)
+
+**After adding**
+
+![](https://raw.githubusercontent.com/sjiang97/sjiang97.github.io/master/2019/projects/AutoCommenter/2.png)
+
+
 #### Usage
 
 ##### Creating configuration file and put it to the running directory
@@ -56,7 +71,15 @@ For example, If there is a line in java code: ``System.out.println("Hello World!
 
  ###### Other places:
 
-For the other place, including method header, method implementation method, return value description, pass in parameter and some other things, program will promote a window like this to let you input word you want. For some method, such as getter, setter, constructor, program will place some predefined words at here. You could edit it as you need. For the edit method, you could use start listen button to speech language you choose in the first step and use voice dedicator. 
+For the other place, including method header, method implementation method, return value description, pass in parameter and some other things, program will promote a window like this to let you input word you want. Default in graph below will be replaced with some guidance words.
+
+![](https://raw.githubusercontent.com/sjiang97/sjiang97.github.io/master/2019/projects/AutoCommenter/3.png)
+
+For some method, such as getter, setter, constructor, program will place some predefined words at here. You could edit it as you need. For the edit method, you could use start listen button to speech language you choose in the first step and use voice dedicator. 
+
+
+
+#### Compile & run
 
 ##### Download from release page or compile from source.
 
