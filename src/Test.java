@@ -155,7 +155,7 @@ public class Test {
     try {
       read(new Scanner(new File("configuration.txt")));
     } catch (FileNotFoundException e1) {
-      System.out.print("File does not exist. Please reenter path of directory:");
+      System.out.print("Configuration file does not exist. Please reenter path of directory:");
       try {
         read(new Scanner(new File(scnr.nextLine())));
       } catch (FileNotFoundException e) {
