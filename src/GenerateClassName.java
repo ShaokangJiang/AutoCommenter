@@ -41,7 +41,7 @@ public class GenerateClassName {
       if(!hasNext()) throw new IndexOutOfBoundsException();
       Object pos1 = keys[cursor];
       StringBuilder pos2 = new StringBuilder();
-      for(String a: parameter.get(pos1)) pos2.append(a+"\r\n");
+      for(String a: parameter.get(pos1)) pos2.append(a+System.getProperty("line.separator"));
       String[] re = {(String)pos1,pos2.toString()};
       return re;
     }
@@ -136,7 +136,7 @@ public class GenerateClassName {
     String[] analyzed = content.substring(0, content.lastIndexOf("(")).trim().split("\\s+");
     if(containModifier(analyzed[analyzed.length - 2]))
       return null;
-    return "\r\n   * @return " + analyzed[analyzed.length - 2] +"\r\n";
+    return System.getProperty("line.separator")+"   * @return " + analyzed[analyzed.length - 2] +System.getProperty("line.separator");
   }
   
   public static void main(String[] args) {

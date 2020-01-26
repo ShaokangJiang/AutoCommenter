@@ -28,7 +28,7 @@ public class Test {
 
   public static void main(String[] args) throws InterruptedException {
     init();
-    try {
+    try {	
       if (args[0].contains("-d")) {
         for (int i = 1; i < args.length; i++) {
           path = args[i];
@@ -77,7 +77,7 @@ public class Test {
         comments += com.substring(end, com.length());
       }
     }
-    return getStr("\r\n" + comments.replaceAll("\\{", "").replaceAll("\\(", "")
+    return getStr(System.getProperty("line.separator") + comments.replaceAll("\\{", "").replaceAll("\\(", "")
         .replaceAll("\\}", "").replaceAll("\\)", ""), "  //");
   }
 
@@ -192,8 +192,8 @@ public class Test {
       String[] v = s.next();
       System.out.println("AS v: " + v[0].split(" ")[1]);
       conf.put(v[0].split(" ")[1].trim(),
-          v[0] + askInfo("There is a case described as \r\n  " + v[0] + "\r\n" + "exists in " + v[1]
-              + "\r\nType below for whatever you want to say after \r\n  " + v[0]));
+          v[0] + askInfo("There is a case described as " + System.getProperty("line.separator") + v[0] + System.getProperty("line.separator") + "exists in " + v[1]
+              + System.getProperty("line.separator") + "Type below for whatever you want to say after "+ System.getProperty("line.separator") + v[0]));
     }
   }
 
@@ -220,8 +220,8 @@ public class Test {
 
   private static void analyzeFile(String string)
       throws FileNotFoundException, IOException, InterruptedException {
-    generate(new Scanner(new File(path + "\\" + string)),
-        new FileWriter(new File(".\\" + file_dir + "\\" + string)));
+    generate(new Scanner(new File(path + File.separator + string)),
+        new FileWriter(new File("."+ File.separator + file_dir + File.separator + string)));
   }
 
   /**
@@ -253,10 +253,10 @@ public class Test {
         toWrite = readComments(toWrite, scnr);
         String comments = meetCondition(toWrite);
         toWrite = formateToWrite(toWrite);
-        if (!comments.equals("\r\n//"))
+        if (!comments.equals(System.getProperty("line.separator")+"//"))
           toWrite += comments;
       }
-      wr.write(toWrite + "\r\n");
+      wr.write(toWrite + System.getProperty("line.separator"));
     }
     wr.close();
     scnr.close();
@@ -270,7 +270,7 @@ public class Test {
       StringBuilder re = new StringBuilder();
       int pre = 0;
       for(Integer a : seps) {
-        re.append(toWrite.substring(pre, a)+"\r\n");
+        re.append(toWrite.substring(pre, a)+System.getProperty("line.separator"));
         pre = a;
       }
       re.append(toWrite.substring(pre, toWrite.length()));
@@ -315,15 +315,15 @@ public class Test {
       counter++;
       char c = inputString.charAt(i);
       if (counter > lineLimit) {
-        out.append("\r\n" + sep + c);
+        out.append(System.getProperty("line.separator") + sep + c);
         counter = 0;
       } else if ((inputString.length() - i > 1) && c == '\r' && inputString.charAt(i + 1) == '\n') {
         i += 1;
         counter = 0;
-        out.append("\r\n");
+        out.append(System.getProperty("line.separator"));
       } else if (c == '\n') {
         counter = 0;
-        out.append("\r\n");
+        out.append(System.getProperty("line.separator"));
       } else
         out.append(c);
     }
@@ -341,26 +341,26 @@ public class Test {
     String aaa = "";
     if (GenerateClassName.returnType(buffer) != null)
       aaa = askInfo("A return type found for method" + buffer
-          + "\r\n If you think this is an error, just click Finish. To say anything, describe below:");
+          + System.getProperty("line.separator") + " If you think this is an error, just click Finish. To say anything, describe below:");
     if (!aaa.equals(""))
       aaa = getStr(GenerateClassName.returnType(buffer) + aaa, "  *");
     else
       aaa = "  *";
-    String header = askInfo("The thing you want to put at javadoc area, At:\r\n " + "/**\r\n"
-        + " * \r\n" + " */\r\n" + buffer, generateHeader(buffer));
+    String header = askInfo("The thing you want to put at javadoc area, At: " + System.getProperty("line.separator") + "/**" + System.getProperty("line.separator")+
+         " * "+System.getProperty("line.separator") + " */" + System.getProperty("line.separator") + buffer, generateHeader(buffer));
     String comments = askInfo(
-        "The thing you want to put at description area to describe method you are using, At:\r\n "
-            + buffer + "/*\r\n" + " * \r\n" + " */",
+        "The thing you want to put at description area to describe method you are using, At: " + System.getProperty("line.separator")
+            + buffer + "/*"+System.getProperty("line.separator") + " * "+System.getProperty("line.separator") + " */",
         generateComment(buffer));
     String para = analyzeParam(buffer);
     if (seperator != -1) {
       buffer =
-          buffer.substring(0, seperator) + "\r\n" + buffer.substring(seperator, buffer.length());
+          buffer.substring(0, seperator) + System.getProperty("line.separator") + buffer.substring(seperator, buffer.length());
       seperator = -1;
     }
-    String re = "  /**\r\n" + "   * " + getStr(header, "  *") + "\r\n   * \r\n" + para + aaa
-        + "\r\n" + "   */\r\n" + buffer + "\r\n     /*\r\n *" + getStr(comments, "  *")
-        + "\r\n     */\r\n";
+    String re = "  /**" + System.getProperty("line.separator") + "   * " + getStr(header, "  *") + System.getProperty("line.separator")+"   * " +System.getProperty("line.separator") + para + aaa
+        + System.getProperty("line.separator") + "   */" +System.getProperty("line.separator") + buffer + System.getProperty("line.separator")+"     /*" +System.getProperty("line.separator")+" *" + getStr(comments, "  *")
+        + System.getProperty("line.separator")+"     */"+System.getProperty("line.separator");
     return re;
   }
 
@@ -410,12 +410,12 @@ public class Test {
     StringBuilder re = new StringBuilder();
     String[] ana = buffer.replaceAll(".*\\(", "").replaceAll("\\).*$", "").split("\\s+");
     for (int i = 1; i < ana.length; i += 2) {
-      re.append(getStr("  * " + conf.get(ana[i].replace(",", "").trim()) + "\r\n", "  * "));
+      re.append(getStr("  * " + conf.get(ana[i].replace(",", "").trim()) + System.getProperty("line.separator"), "  * "));
     }
     if (buffer.contains("throws")) {
       String[] ana1 = buffer.replaceAll(".*throws", "").replaceAll("\\{.*", "").split(",");
       for (int i = 0; i < ana1.length; i++) {
-        re.append(getStr("  * " + conf.get(ana1[i].trim()) + "\r\n", "  * "));
+        re.append(getStr("  * " + conf.get(ana1[i].trim()) + System.getProperty("line.separator"), "  * "));
       }
     }
     return re.toString();

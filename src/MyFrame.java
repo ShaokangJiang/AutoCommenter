@@ -143,9 +143,6 @@ public class MyFrame extends JFrame {
           @Override
           public void onEndOfSpeech() {}
 
-          /**
-           * 获取听写结果. 获取RecognizerResult类型的识别结果，并对结果进行累加，显示到Area里
-           */
           @Override
           public void onResult(RecognizerResult results, boolean islast) {
 
@@ -202,15 +199,15 @@ public class MyFrame extends JFrame {
     panelSouth.add(button_finish);
   }
 
-  void setting()// 属性设置
+  void setting()
   {
     final String engType = "cloud";
     mIat.setParameter(SpeechConstant.ENGINE_TYPE, "cloud");
     mIat.setParameter(SpeechConstant.SAMPLE_RATE, "16000");//
     mIat.setParameter(SpeechConstant.NET_TIMEOUT, "20000");
     mIat.setParameter(SpeechConstant.KEY_SPEECH_TIMEOUT, "60000");
-    mIat.setParameter(SpeechConstant.LANGUAGE, language);// 语言en_us(英语)
-    // zh_cn(中文)
+    mIat.setParameter(SpeechConstant.LANGUAGE, language);
+ 
 
     mIat.setParameter(SpeechConstant.ACCENT, "mandarin");
     mIat.setParameter("dwa", "wpgs");
@@ -219,9 +216,9 @@ public class MyFrame extends JFrame {
     mIat.setParameter(SpeechConstant.VAD_EOS, "1800");
     mIat.setParameter(SpeechConstant.ASR_NBEST, "1");
     mIat.setParameter(SpeechConstant.ASR_WBEST, "1");
-    mIat.setParameter(SpeechConstant.ASR_PTT, "1");// 标点符号 0(关) 1(开)
-    mIat.setParameter(SpeechConstant.RESULT_TYPE, "json"); // 返回数据格式
-                                                           // plain或者jason
+    mIat.setParameter(SpeechConstant.ASR_PTT, "1");
+    mIat.setParameter(SpeechConstant.RESULT_TYPE, "json"); 
+                                                          
     mIat.setParameter(SpeechConstant.ASR_AUDIO_PATH, null);
   }
 
