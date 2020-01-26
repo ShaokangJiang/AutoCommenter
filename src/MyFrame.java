@@ -207,7 +207,11 @@ public class MyFrame extends JFrame {
     mIat.setParameter(SpeechConstant.NET_TIMEOUT, "20000");
     mIat.setParameter(SpeechConstant.KEY_SPEECH_TIMEOUT, "60000");
     mIat.setParameter(SpeechConstant.LANGUAGE, language);
+<<<<<<< HEAD
  
+=======
+   
+>>>>>>> fcd91c9ba8f1850ec7b24984d23f331478239013
 
     mIat.setParameter(SpeechConstant.ACCENT, "mandarin");
     mIat.setParameter("dwa", "wpgs");
@@ -218,7 +222,10 @@ public class MyFrame extends JFrame {
     mIat.setParameter(SpeechConstant.ASR_WBEST, "1");
     mIat.setParameter(SpeechConstant.ASR_PTT, "1");
     mIat.setParameter(SpeechConstant.RESULT_TYPE, "json"); 
+<<<<<<< HEAD
                                                           
+=======
+>>>>>>> fcd91c9ba8f1850ec7b24984d23f331478239013
     mIat.setParameter(SpeechConstant.ASR_AUDIO_PATH, null);
   }
 
